@@ -31,13 +31,15 @@ package addressbook
 
 import (
 	"net/http"
+	"fmt"
+	"strconv"
+
+	"github.com/beevik/etree"
+	"github.com/gorilla/mux"
+
 	"swordlord.com/fenneld/handler"
 	"swordlord.com/fennelcore/db/tablemodule"
-	"fmt"
-	"github.com/beevik/etree"
 	"swordlord.com/fennelcore/db/model"
-	"strconv"
-	"github.com/gorilla/mux"
 )
 
 // TODO check if on root, if yes, answer differently
@@ -85,7 +87,7 @@ func PropfindUser(w http.ResponseWriter, req *http.Request){
 	// let helper function fill prop element with requested props from the root
 	fillPropfindResponseOnAddressbookRoot(psRoot, sUser, propsQuery)
 
-	err, rowsADB := tablemodule.GetAddressbooksFromUser(sUser)
+	rowsADB, err := tablemodule.GetAddressbooksFromUser(sUser)
 	if err != nil {
 
 		fmt.Printf("Error getting ADB from User: %s", err)

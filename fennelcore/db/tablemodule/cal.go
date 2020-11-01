@@ -53,11 +53,13 @@ func ListCal() {
 	fcdb.WriteTable([]string{"Id", "CrtDat", "UpdDat"}, cal)
 }
 
-func AddCal(user string, calId string, displayname string, colour string, freebusyset string, order int, supportedCalComponent string, synctoken int, timezone string) (model.CAL, error) {
+func AddCal(user string, calID string, displayname string, colour string,
+	freebusyset string, order int, supportedCalComponent string,
+	synctoken int, timezone string) (model.CAL, error) {
 
 	db := fcdb.GetDB()
 
-	cal := model.CAL{Pkey: calId}
+	cal := model.CAL{Pkey: calID}
 
 	cal.Owner = user
 	cal.Displayname = displayname
@@ -71,27 +73,27 @@ func AddCal(user string, calId string, displayname string, colour string, freebu
 	retDB := db.Create(&cal)
 
 	if retDB.Error != nil {
-		log.Printf("Error with CAL %q: %s\n", calId, retDB.Error)
+		log.Printf("Error with CAL %q: %s\n", calID, retDB.Error)
 		return model.CAL{}, retDB.Error
 	}
 
-	fmt.Printf("CAL %s for user %s added.\n", calId, user)
+	fmt.Printf("CAL %s for user %s added.\n", calID, user)
 
 	return cal, nil
 }
 
-func GetCal(calId string) (model.CAL, error) {
+func GetCal(calID string) (model.CAL, error) {
 
 	db := fcdb.GetDB()
 
 	var cal model.CAL
-	retDB := db.First(&cal, "pkey = ?", calId)
+	retDB := db.First(&cal, "pkey = ?", calID)
 
 
-	//	retDB := db.Model(&model.CAL{}).Where("pkey=?", calId)
-	//retDB := db.Where("Pkey = ?", calId).First(&model.CAL{})
+	//	retDB := db.Model(&model.CAL{}).Where("pkey=?", calID)
+	//retDB := db.Where("Pkey = ?", calID).First(&model.CAL{})
 	if retDB.Error != nil {
-		log.Printf("Error with loading CAL %q: %s\n", calId, retDB.Error)
+		log.Printf("Error with loading CAL %q: %s\n", calID, retDB.Error)
 		return model.CAL{}, retDB.Error
 	}
 
@@ -141,7 +143,7 @@ func DeleteCal(name string) {
 		return
 	}
 
-	log.Printf("Deleting Calendar: %s", &cal.Pkey)
+	log.Printf("Deleting Calendar: %s", cal.Pkey)
 
 	db.Delete(&cal)
 

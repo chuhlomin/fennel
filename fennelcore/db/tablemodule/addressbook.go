@@ -1,4 +1,5 @@
 package tablemodule
+
 /*-----------------------------------------------------------------------------
  **
  ** - Fennel -
@@ -31,6 +32,7 @@ package tablemodule
 import (
 	"fmt"
 	"log"
+
 	fcdb "swordlord.com/fennelcore"
 	"swordlord.com/fennelcore/db/model"
 )
@@ -47,7 +49,11 @@ func ListAddressbook() {
 
 	for _, rec := range rows {
 
-		adb = append(adb, []string{rec.Pkey, rec.CrtDat.Format("2006-01-02 15:04:05"), rec.UpdDat.Format("2006-01-02 15:04:05")})
+		adb = append(
+			adb,
+			[]string{rec.Pkey, rec.CrtDat.Format("2006-01-02 15:04:05"),
+				rec.UpdDat.Format("2006-01-02 15:04:05")},
+		)
 	}
 
 	//wombag.WriteTable([]string{"Id", "CrtDat", "UpdDat"}, adb)
@@ -59,7 +65,7 @@ func AddAddressbook(name string, password string, user string) (model.ADB, error
 
 	_, err := hashPassword(password)
 	if err != nil {
-		log.Printf("Error with hashing password %q: %s\n", password, err )
+		log.Printf("Error with hashing password %q: %s\n", password, err)
 		return model.ADB{}, err
 	}
 
@@ -77,7 +83,7 @@ func AddAddressbook(name string, password string, user string) (model.ADB, error
 	return adb, nil
 }
 
-func GetAddressbooksFromUser(user string) (error, []*model.ADB) {
+func GetAddressbooksFromUser(user string) ([]*model.ADB, error) {
 
 	var adb model.ADB
 
@@ -92,10 +98,10 @@ func GetAddressbooksFromUser(user string) (error, []*model.ADB) {
 
 	if retDB.Error != nil {
 		log.Printf("Error with ADB from User %q: %s\n", user, retDB.Error)
-		return retDB.Error, rows
+		return rows, retDB.Error
 	}
 
-	return nil, rows
+	return rows, nil
 }
 
 func GetAddressbookByName(name string) (error, *model.ADB) {
@@ -146,7 +152,7 @@ func UpdateAddressbook(name string, password string) error {
 
 	pwd, err := hashPassword(password)
 	if err != nil {
-		log.Printf("Error with hashing password %q: %s\n", password, err )
+		log.Printf("Error with hashing password %q: %s\n", password, err)
 		return err
 	}
 
@@ -182,7 +188,7 @@ func DeleteAddressbook(name string) {
 		return
 	}
 
-	log.Printf("Deleting Device: %s", &rec.Pkey)
+	log.Printf("Deleting Device: %s", rec.Pkey)
 
 	db.Delete(&rec)
 

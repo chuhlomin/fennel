@@ -54,11 +54,11 @@ func ListVCardsPerAddressbook(addressbook string) {
 	fcdb.WriteTable([]string{"Id", "CrtDat", "UpdDat"}, vcard)
 }
 
-func AddVCard(vcardId string, owner string, addressbookId string, isGroup bool, content string) (model.VCARD, error) {
+func AddVCard(vcardID string, owner string, addressbookId string, isGroup bool, content string) (model.VCARD, error) {
 
 	db := fcdb.GetDB()
 
-	vcard := model.VCARD{Pkey: vcardId}
+	vcard := model.VCARD{Pkey: vcardID}
 
 	vcard.AddressbookId = addressbookId
 	vcard.Owner = owner
@@ -68,11 +68,11 @@ func AddVCard(vcardId string, owner string, addressbookId string, isGroup bool, 
 	retDB := db.Create(&vcard)
 
 	if retDB.Error != nil {
-		log.Printf("Error with VCARD %q: %s\n", vcardId, retDB.Error)
+		log.Printf("Error with VCARD %q: %s\n", vcardID, retDB.Error)
 		return model.VCARD{}, retDB.Error
 	}
 
-	fmt.Printf("VCARD %s for owner %s added.\n", vcardId, owner)
+	fmt.Printf("VCARD %s for owner %s added.\n", vcardID, owner)
 
 	return vcard, nil
 }
@@ -82,15 +82,15 @@ func UpdateVCard(name string, password string) error {
 	return nil
 }
 
-func GetVCard(vcardId string) (model.VCARD, error) {
+func GetVCard(vcardID string) (model.VCARD, error) {
 
 	db := fcdb.GetDB()
 
 	var vcard model.VCARD
-	retDB := db.First(&vcard, "pkey = ?", vcardId)
+	retDB := db.First(&vcard, "pkey = ?", vcardID)
 
 	if retDB.Error != nil {
-		log.Printf("Error with loading VCARD %q: %s\n", vcardId, retDB.Error)
+		log.Printf("Error with loading VCARD %q: %s\n", vcardID, retDB.Error)
 		return model.VCARD{}, retDB.Error
 	}
 
@@ -138,27 +138,27 @@ func FindVCardsFromAddressbook(adbID string, vcardIDs []string) (error, []*model
 }
 
 
-func DeleteVCard(vcardId string) error {
+func DeleteVCard(vcardID string) error {
 
 	db := fcdb.GetDB()
 
 	vcard := &model.VCARD{}
 
-	retDB := db.Where("pkey = ?", vcardId).First(&vcard)
+	retDB := db.Where("pkey = ?", vcardID).First(&vcard)
 
 	if retDB.Error != nil {
-		log.Printf("Error with VCARD %q: %s\n", vcardId, retDB.Error)
+		log.Printf("Error with VCARD %q: %s\n", vcardID, retDB.Error)
 		log.Fatal(retDB.Error)
 		return retDB.Error
 	}
 
 	if retDB.RowsAffected <= 0 {
-		log.Printf("VCARD not found: %s\n", vcardId)
-		log.Fatal("VCARD not found: " + vcardId + "\n")
+		log.Printf("VCARD not found: %s\n", vcardID)
+		log.Fatal("VCARD not found: " + vcardID + "\n")
 		return retDB.Error
 	}
 
-	log.Printf("Deleting VCARD: %s", &vcard.Pkey)
+	log.Printf("Deleting VCARD: %s", vcard.Pkey)
 
 	ret := db.Delete(&vcard)
 

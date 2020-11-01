@@ -221,7 +221,7 @@ func Delete(w http.ResponseWriter, req *http.Request){
 	err := tablemodule.DeleteIcs(sEvent)
 
 	if err != nil {
-		log.Printf("Error with deleting Ics %q: %s\n", sEvent)
+		log.Printf("Error with deleting Ics %q: %v", sEvent, err)
 
 		handler.RespondWithMessage(w, http.StatusInternalServerError, err.Error())
 

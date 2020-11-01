@@ -31,13 +31,15 @@ package addressbook
 
 import (
 	"net/http"
-	"swordlord.com/fenneld/handler"
-	"github.com/gorilla/mux"
 	"io/ioutil"
-	"swordlord.com/fennelcore/db/tablemodule"
 	"fmt"
 	"log"
 	"strings"
+
+	"github.com/gorilla/mux"
+
+	"swordlord.com/fenneld/handler"
+	"swordlord.com/fennelcore/db/tablemodule"
 )
 
 func Proppatch(w http.ResponseWriter, req *http.Request){
@@ -105,7 +107,7 @@ func Delete(w http.ResponseWriter, req *http.Request){
 	err := tablemodule.DeleteVCard(sCard)
 
 	if err != nil {
-		log.Printf("Error with deleting VCard %q: %s\n", sCard)
+		log.Printf("Error with deleting VCard %q: %v", sCard, err)
 
 		handler.RespondWithMessage(w, http.StatusInternalServerError, err.Error())
 

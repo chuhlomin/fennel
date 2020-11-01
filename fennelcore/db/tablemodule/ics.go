@@ -30,13 +30,15 @@ package tablemodule
 -----------------------------------------------------------------------------*/
 import (
 	"fmt"
-	"github.com/Jeffail/gabs"
-	"github.com/vjeantet/jodaTime"
 	"log"
 	"strings"
-	fcdb "swordlord.com/fennelcore"
-	"swordlord.com/fennelcore/db/model"
 	"time"
+
+	"github.com/Jeffail/gabs"
+	"github.com/vjeantet/jodaTime"
+
+	"swordlord.com/fennelcore/db/model"
+	fcdb "swordlord.com/fennelcore"
 )
 
 const DATEPARSER string = "yMd'T'Hms"
@@ -49,7 +51,8 @@ func parseDatesAndFill(json *gabs.Container, ics *model.ICS) error{
 	//	DTEND;TZID=Europe/Vatican:20190823T190200
 
 	// TODO respect the TZID
-	for key, child := range json.Search("VCALENDAR", "VEVENT").ChildrenMap() {
+	m, _ := json.Search("VCALENDAR", "VEVENT").ChildrenMap()
+	for key, child := range m {
 		if strings.HasPrefix(key, "DTSTART") {
 
 			format := DATEPARSER
@@ -276,7 +279,7 @@ func DeleteIcs(icsId string) error {
 		return retDB.Error
 	}
 
-	log.Printf("Deleting ICS: %s", &ics.Pkey)
+	log.Printf("Deleting ICS: %s", ics.Pkey)
 
 	ret := db.Delete(&ics)
 
